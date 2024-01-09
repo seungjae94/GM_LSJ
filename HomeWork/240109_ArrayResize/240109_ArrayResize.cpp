@@ -90,6 +90,8 @@ private:
 
 int main()
 {
+    LeckCheck;
+
     IntArray NewArray = IntArray(5);
     // ? ? ? ? ?
 
