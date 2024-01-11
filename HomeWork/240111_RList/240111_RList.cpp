@@ -15,22 +15,21 @@ private:
 		ListNode* Prev = nullptr;
 	};
 
-public:
-	class iterator
+	class common_iterator
 	{
 		friend MyList;
 
 	public:
-		iterator()
+		common_iterator()
 		{
 		}
 
-		iterator(ListNode* _CurNode)
+		common_iterator(ListNode* _CurNode)
 			: CurNode(_CurNode)
 		{
 		}
 
-		bool operator!=(const iterator& _Other)
+		bool operator!=(const common_iterator& _Other)
 		{
 			return CurNode != _Other.CurNode;
 		}
@@ -41,38 +40,42 @@ public:
 		}
 
 		// 연산자 겹지정 중에 
-		void operator++()
+		virtual void operator++()
 		{
-			CurNode = CurNode->Next;
 		}
-
-
 	private:
 		ListNode* CurNode = nullptr;
 	};
 
-	class reverse_iterator
-	{
-		friend MyList;
+public:
 
+	class iterator : public common_iterator
+	{
+	public:
+		iterator()
+		{
+		}
+
+		iterator(ListNode* _CurNode) : common_iterator(_CurNode)
+		{
+		}
+
+		void operator++()
+		{
+			CurNode = CurNode->Next;
+		}
+	};
+
+	class reverse_iterator : public common_iterator
+	{
 	public:
 		reverse_iterator()
 		{
 		}
 
 		reverse_iterator(ListNode* _CurNode)
-			: CurNode(_CurNode)
+			: common_iterator(_CurNode)
 		{
-		}
-
-		bool operator!=(const reverse_iterator& _Other)
-		{
-			return CurNode != _Other.CurNode;
-		}
-
-		DataType& operator*()
-		{
-			return CurNode->Data;
 		}
 
 		// 연산자 겹지정 중에 
@@ -80,10 +83,6 @@ public:
 		{
 			CurNode = CurNode->Prev;
 		}
-
-
-	private:
-		ListNode* CurNode = nullptr;
 	};
 
 	MyList()
@@ -209,8 +208,8 @@ int main()
 	LeakCheck;
 
 	{
-		std::cout << "std 리스트" << std::endl;
-		std::list<int> NewList = std::list<int>();
+		std::cout << "내 리스트 (iterator)" << std::endl;
+		MyList NewList = MyList();
 		// 0, 1, 2, 3, 4
 		for (int i = 0; i < 5; i++)
 		{
@@ -218,8 +217,8 @@ int main()
 			// NewList.push_front();
 		}
 
-		std::list<int>::reverse_iterator rStartIter = NewList.rbegin();
-		std::list<int>::reverse_iterator rEndIter = NewList.rend();
+		MyList::iterator rStartIter = NewList.begin();
+		MyList::iterator rEndIter = NewList.end();
 
 		for (/*std::list<int>::iterator StartIter = NewList.begin()*/
 			; rStartIter != rEndIter
@@ -230,7 +229,7 @@ int main()
 	}
 
 	{
-		std::cout << "내 리스트" << std::endl;
+		std::cout << "내 리스트 (reverse_iterator)" << std::endl;
 		MyList NewList = MyList();
 		// 0, 1, 2, 3, 4
 		for (int i = 0; i < 5; i++)
@@ -239,6 +238,7 @@ int main()
 			// NewList.push_front();
 		}
 
+		MyList::iterator NewStartIter = NewList.begin();
 		MyList::reverse_iterator rStartIter = NewList.rbegin();
 		MyList::reverse_iterator rEndIter = NewList.rend();
 
