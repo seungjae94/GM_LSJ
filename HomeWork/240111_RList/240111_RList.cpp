@@ -238,7 +238,6 @@ int main()
 			// NewList.push_front();
 		}
 
-		MyList::iterator NewStartIter = NewList.begin();
 		MyList::reverse_iterator rStartIter = NewList.rbegin();
 		MyList::reverse_iterator rEndIter = NewList.rend();
 
