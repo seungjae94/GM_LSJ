@@ -57,19 +57,13 @@ void Head::Update()
 		return;
 	}
 
-	// 捞悼 贸府
-	int2 PrevPos = GetPos();
-	if (CurDir != PrevDir * (-1))
+	// 赣府 捞悼 贸府
+	bool MoveFlag = CurDir != PrevDir * (-1);
+	int2 BeforeMovePos = GetPos();
+	if (MoveFlag)
 	{
 		AddPos(CurDir);
 		PrevDir = CurDir;
-
-		Part* BackBody = Back;
-		while (BackBody != nullptr)
-		{
-			BackBody->SetPos(PrevPos);
-			BackBody = BackBody->GetBack();
-		}
 	}
 
 	// 面倒 贸府
@@ -77,11 +71,33 @@ void Head::Update()
 
 	if (CurBody->GetPos() == GetPos())
 	{
-		Back = CurBody;
-		CurBody->SetFront(this);
-		CurBody->SetPos(PrevPos);
+		// 部府 茫扁
+		Part* Tail = this;
+		Part* TailNext = Back;
+		while (TailNext != nullptr)
+		{
+			Tail = TailNext;
+			TailNext = TailNext->GetBack();
+		}
+		
+		// 部府 困摹俊 眠啊
+		Tail->SetBack(CurBody);
+		CurBody->SetFront(Tail);
 
 		BodyManager::ResetBody();
 	}
 	
+	// 个烹 捞悼 贸府
+	if (MoveFlag)
+	{
+		int2 TargetPos = BeforeMovePos;
+		Part* BackBody = Back;
+		while (BackBody != nullptr)
+		{
+			int2 NextTargetPos = BackBody->GetPos();
+			BackBody->SetPos(TargetPos);
+			BackBody = BackBody->GetBack();
+			TargetPos = NextTargetPos;
+		}
+	}
 }
