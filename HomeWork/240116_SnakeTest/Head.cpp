@@ -24,25 +24,24 @@ void Head::Update()
 	// X Y
 	// 1 0
 
-	int2 CurDir = { 0, 0 };
-
+	int2 MoveDir = { 0, 0 };
 	switch (Select)
 	{
 	case 'A':
 	case 'a':
-		CurDir = Left;
+		MoveDir = Left;
 		break;
 	case 'S':
 	case 's':
-		CurDir = Down;
+		MoveDir = Down;
 		break;
 	case 'W':
 	case 'w':
-		CurDir = Up;
+		MoveDir = Up;
 		break;
 	case 'D':
 	case 'd':
-		CurDir = Right;
+		MoveDir = Right;
 		break;
 	case '1':
 		GetCore()->EngineEnd();
@@ -58,52 +57,69 @@ void Head::Update()
 	}
 
 	// 다음 이동 위치 계산
-	bool MoveFlag = CurDir != PrevDir * (-1);
-	int2 MovePos = GetPos() + CurDir;
+	bool MoveFlag = MoveDir != PrevDir * (-1);
+	int2 MovePos = GetPos() + MoveDir;
 
 	// 충돌 처리
+	Collision(MovePos);
+	
+	// 이동 처리
+	if (MoveFlag)
+	{
+		Move(MovePos, MoveDir);
+	}
+}
+
+Part* Head::GetTail()
+{
+	// 꼬리 찾기
+	Part* Tail = this;
+	Part* TailNext = Back;
+	while (TailNext != nullptr)
+	{
+		Tail = TailNext;
+		TailNext = TailNext->GetBack();
+	}
+
+	return Tail;
+}
+
+void Head::Collision(const int2& _MovePos)
+{
 	Body* CurBody = BodyManager::GetCurBody();
 
-	if (CurBody->GetPos() == MovePos)
+	if (CurBody->GetPos() == _MovePos)
 	{
-		// 꼬리 찾기
-		Part* Tail = this;
-		Part* TailNext = Back;
-		while (TailNext != nullptr)
-		{
-			Tail = TailNext;
-			TailNext = TailNext->GetBack();
-		}
-		
+		Part* Tail = GetTail();
+
 		// 꼬리 위치에 추가
 		Tail->SetBack(CurBody);
 		CurBody->SetFront(Tail);
 
 		BodyManager::ResetBody();
 	}
-	
-	// 이동 처리
-	if (MoveFlag)
+}
+
+void Head::Move(int2& _HeadMovePos, const int2& _MoveDir)
+{
+	// MovePos: 현재 Part*가 이동해야 할 위치
+	// TrailingMovePos: 현재 Part*가 이동하기 전의 위치 = 다음 Part*가 이동해야 할 위치
+	int2& MovePos = _HeadMovePos;
+	int2 TrailingMovePos = GetPos();
+
+	// 머리 이동
+	SetPos(MovePos);
+	PrevDir = _MoveDir;
+	MovePos = TrailingMovePos; 
+
+	// 몸통 이동
+	Part* BackBody = Back;
+	while (BackBody != nullptr)
 	{
-		// MovePos: 현재 Part*가 이동해야 할 위치
-		// TrailingMovePos: 현재 Part*가 이동하기 전의 위치
-		// 따라서 TrailingMovePos는 항상 MovePos를 뒤따라야 한다.
-		int2 TrailingMovePos = GetPos();
+		TrailingMovePos = BackBody->GetPos();
+		BackBody->SetPos(MovePos);
 
-		// 머리 이동
-		SetPos(MovePos);
-		PrevDir = CurDir;
-
-		// 몸통 이동
 		MovePos = TrailingMovePos;
-		Part* BackBody = Back;
-		while (BackBody != nullptr)
-		{
-			TrailingMovePos = BackBody->GetPos();
-			BackBody->SetPos(MovePos);
-
-			MovePos = TrailingMovePos;
-			BackBody = BackBody->GetBack();
-		}
+		BackBody = BackBody->GetBack();
 	}
 }
