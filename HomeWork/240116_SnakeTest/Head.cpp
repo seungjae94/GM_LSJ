@@ -58,10 +58,18 @@ void Head::Update()
 	}
 
 	// 捞悼 贸府
+	int2 PrevPos = GetPos();
 	if (CurDir != PrevDir * (-1))
 	{
 		AddPos(CurDir);
 		PrevDir = CurDir;
+
+		Part* BackBody = Back;
+		while (BackBody != nullptr)
+		{
+			BackBody->SetPos(PrevPos);
+			BackBody = BackBody->GetBack();
+		}
 	}
 
 	// 面倒 贸府
@@ -70,6 +78,9 @@ void Head::Update()
 	if (CurBody->GetPos() == GetPos())
 	{
 		Back = CurBody;
+		CurBody->SetFront(this);
+		CurBody->SetPos(PrevPos);
+
 		BodyManager::ResetBody();
 	}
 	
