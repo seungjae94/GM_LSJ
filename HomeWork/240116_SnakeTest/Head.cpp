@@ -95,6 +95,7 @@ void Head::Collision(const int2& _MovePos)
 		// 꼬리 위치에 추가
 		Tail->SetBack(CurBody);
 		CurBody->SetFront(Tail);
+		CurBody->SetRenderChar('@');
 
 		BodyManager::ResetBody();
 	}
