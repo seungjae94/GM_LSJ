@@ -178,5 +178,22 @@ void EngineCore::Start()
             }
         }
         AllUpdateObject.clear();
+
+        // 매니저 릴리즈
+        {
+            std::map<int, ConsoleUpdater*>::iterator StartIter = AllManager.begin();
+            std::map<int, ConsoleUpdater*>::iterator EndIter = AllManager.end();
+
+            for (; StartIter != EndIter; ++StartIter)
+            {
+                ConsoleUpdater* Object = StartIter->second;
+
+                if (nullptr != Object)
+                {
+                    delete Object;
+                    Object = nullptr;
+                }
+            }
+        }
     }
 }

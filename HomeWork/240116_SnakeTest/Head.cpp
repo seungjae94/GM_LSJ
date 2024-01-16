@@ -57,19 +57,14 @@ void Head::Update()
 		return;
 	}
 
-	// 머리 이동 처리
+	// 다음 이동 위치 계산
 	bool MoveFlag = CurDir != PrevDir * (-1);
-	int2 BeforeMovePos = GetPos();
-	if (MoveFlag)
-	{
-		AddPos(CurDir);
-		PrevDir = CurDir;
-	}
+	int2 MovePos = GetPos() + CurDir;
 
 	// 충돌 처리
 	Body* CurBody = BodyManager::GetCurBody();
 
-	if (CurBody->GetPos() == GetPos())
+	if (CurBody->GetPos() == MovePos)
 	{
 		// 꼬리 찾기
 		Part* Tail = this;
@@ -87,17 +82,28 @@ void Head::Update()
 		BodyManager::ResetBody();
 	}
 	
-	// 몸통 이동 처리
+	// 이동 처리
 	if (MoveFlag)
 	{
-		int2 TargetPos = BeforeMovePos;
+		// MovePos: 현재 Part*가 이동해야 할 위치
+		// TrailingMovePos: 현재 Part*가 이동하기 전의 위치
+		// 따라서 TrailingMovePos는 항상 MovePos를 뒤따라야 한다.
+		int2 TrailingMovePos = GetPos();
+
+		// 머리 이동
+		SetPos(MovePos);
+		PrevDir = CurDir;
+
+		// 몸통 이동
+		MovePos = TrailingMovePos;
 		Part* BackBody = Back;
 		while (BackBody != nullptr)
 		{
-			int2 NextTargetPos = BackBody->GetPos();
-			BackBody->SetPos(TargetPos);
+			TrailingMovePos = BackBody->GetPos();
+			BackBody->SetPos(MovePos);
+
+			MovePos = TrailingMovePos;
 			BackBody = BackBody->GetBack();
-			TargetPos = NextTargetPos;
 		}
 	}
 }
