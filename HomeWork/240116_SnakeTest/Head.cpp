@@ -57,14 +57,13 @@ void Head::Update()
 	}
 
 	// 다음 이동 위치 계산
-	bool MoveFlag = MoveDir != PrevDir * (-1);
 	int2 MovePos = GetPos() + MoveDir;
 
 	// 충돌 처리
 	Collision(MovePos);
 	
 	// 이동 처리
-	if (MoveFlag)
+	if (MoveDir != int2{0, 0} && MoveDir != PrevDir * (-1))
 	{
 		Move(MovePos, MoveDir);
 	}
