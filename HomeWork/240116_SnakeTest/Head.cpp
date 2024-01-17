@@ -11,18 +11,14 @@
 
 void Head::Update()
 {
+	// 입력이 들어오지 않아도 이동
+	int Select = 0;
 	int InputCount = _kbhit();
-	if (0 == InputCount)
+	while (InputCount > 0)
 	{
-		return;
+		Select = _getch();
+		InputCount = _kbhit();
 	}
-
-	int Select = _getch();
-
-	// InputCount = _kbhit();
-
-	// X Y
-	// 1 0
 
 	int2 MoveDir = { 0, 0 };
 	switch (Select)
@@ -56,17 +52,18 @@ void Head::Update()
 		return;
 	}
 
-	// 다음 이동 위치 계산
+	// 다음에 이동할 위치 계산
+	if (MoveDir == int2{ 0, 0 } || MoveDir == PrevDir * (-1))
+	{
+		MoveDir = PrevDir;
+	}
 	int2 MovePos = GetPos() + MoveDir;
 
 	// 충돌 처리
 	Collision(MovePos);
 	
 	// 이동 처리
-	if (MoveDir != int2{0, 0} && MoveDir != PrevDir * (-1))
-	{
-		Move(MovePos, MoveDir);
-	}
+	Move(MovePos, MoveDir);
 }
 
 Part* Head::GetTail()
