@@ -149,6 +149,7 @@
     <ClCompile Include="Head.cpp" />
     <ClCompile Include="Part.cpp" />
     <ClCompile Include="SnakeGame.cpp" />
+    <ClCompile Include="Wall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ConsoleEngine\ConsoleEngine.vcxproj">
@@ -161,6 +162,7 @@
     <ClInclude Include="GlobalValue.h" />
     <ClInclude Include="Head.h" />
     <ClInclude Include="Part.h" />
+    <ClInclude Include="Wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

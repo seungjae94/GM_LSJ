@@ -11,7 +11,8 @@ void BodyManager::Update()
 		return;
 	}
 
-	std::list<ConsoleObject*> AllList = GetCore()->GetUpdateGroup();
+	std::list<ConsoleObject*> AllPartList = GetCore()->GetUpdateGroup(0);
+	std::list<ConsoleObject*> AllWallList = GetCore()->GetUpdateGroup(1);
 
 	int ScreenX = GetCore()->Screen.GetScreenX();
 	int ScreenY = GetCore()->Screen.GetScreenY();
@@ -29,11 +30,26 @@ void BodyManager::Update()
 		}
 	}
 
-
 	// 오브젝트가 존재하는 위치를 지운다.
 	{
-		std::list<ConsoleObject*>::iterator StartIter = AllList.begin();
-		std::list<ConsoleObject*>::iterator EndIter = AllList.end();
+		std::list<ConsoleObject*>::iterator StartIter = AllPartList.begin();
+		std::list<ConsoleObject*>::iterator EndIter = AllPartList.end();
+		for (; StartIter != EndIter; ++StartIter)
+		{
+			ConsoleObject* Object = *StartIter;
+
+			if (nullptr == Object)
+			{
+				MsgBoxAssert("오브젝트가 nullptr인 녀석이 있습니다.");
+			}
+
+			AllRange.remove(Object->GetPos());
+		}
+	}
+
+	{
+		std::list<ConsoleObject*>::iterator StartIter = AllWallList.begin();
+		std::list<ConsoleObject*>::iterator EndIter = AllWallList.end();
 		for (; StartIter != EndIter; ++StartIter)
 		{
 			ConsoleObject* Object = *StartIter;

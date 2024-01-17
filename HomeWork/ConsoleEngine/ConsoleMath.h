@@ -47,6 +47,36 @@ public:
 		X += _Other.X;
 		Y += _Other.Y;
 	}
+
+	bool operator<(const int2& _Other) const
+	{
+		if (X < _Other.X)
+		{
+			return true;
+		}
+
+		if (X > _Other.X)
+		{
+			return false;
+		}
+
+		return Y < _Other.Y;
+	}
+
+	bool operator>(const int2& _Other) const
+	{
+		if (X > _Other.X)
+		{
+			return true;
+		}
+
+		if (X < _Other.X)
+		{
+			return false;
+		}
+
+		return Y > _Other.Y;
+	}
 };
 
 const int2 Left = { -1, 0 };

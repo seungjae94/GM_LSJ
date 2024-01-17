@@ -63,6 +63,7 @@ void Head::Update()
 	bool GameEnd = false;
 	CollisionWithCurBody(MovePos);
 	CollisionWithMyBody(MovePos, GameEnd);
+	CollisionWithWall(MovePos, GameEnd);
 
 	// 게임 종료 처리
 	if (GameEnd)
@@ -113,6 +114,21 @@ void Head::CollisionWithMyBody(const int2& _MovePos, bool& _GameEnd)
 
 		MyBody = MyBody->GetBack();
 	}
+}
+
+void Head::CollisionWithWall(const int2& _MovePos, bool& _GameEnd)
+{
+	int2 OriginalPos = GetPos();
+	SetPos(_MovePos);
+	ConsoleObject* Object = Collision(1);
+	SetPos(OriginalPos);
+
+	if (Object != nullptr)
+	{
+		_GameEnd = true;
+		return;
+	}
+
 }
 
 void Head::Move(int2& _HeadMovePos, const int2& _MoveDir)
