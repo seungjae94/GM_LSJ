@@ -16,5 +16,6 @@
     <ClInclude Include="Head.h" />
     <ClInclude Include="Part.h" />
     <ClInclude Include="Wall.h" />
+    <ClInclude Include="SnakeGameEnum.h" />
   </ItemGroup>
 </Project>

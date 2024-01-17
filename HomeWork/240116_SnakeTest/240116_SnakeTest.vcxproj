@@ -162,6 +162,7 @@
     <ClInclude Include="GlobalValue.h" />
     <ClInclude Include="Head.h" />
     <ClInclude Include="Part.h" />
+    <ClInclude Include="SnakeGameEnum.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
