@@ -22,11 +22,16 @@ int main()
     const int ScreenX = 20;
     const int ScreenY = 20;
 
+    const char PlayerRenderChar = '@';
+    const char WallRenderChar = '#';
+    const char CurBodyRenderChar = '&';
+
     EngineCore.Init({ ScreenX, ScreenY });
 
     {
         // Player* NewObject = new Player();
         GBodyManager = EngineCore.CreateManager<BodyManager>(0);
+        GBodyManager->SetCurBodyRenderChar(CurBodyRenderChar);
     }
 
     {
@@ -41,11 +46,11 @@ int main()
         {
             Wall* NewWall0 = EngineCore.CreateObject<Wall>(SnakeGameObjectType::Wall);
             NewWall0->SetPos({x, 0});
-            NewWall0->SetRenderChar('W');
+            NewWall0->SetRenderChar(WallRenderChar);
 
             Wall* NewWall1 = EngineCore.CreateObject<Wall>(SnakeGameObjectType::Wall);
             NewWall1->SetPos({ x, ScreenY - 1 });
-            NewWall1->SetRenderChar('W');
+            NewWall1->SetRenderChar(WallRenderChar);
         }
 
         // 세로벽 생성
@@ -53,11 +58,11 @@ int main()
         {
             Wall* NewWall0 = EngineCore.CreateObject<Wall>(SnakeGameObjectType::Wall);
             NewWall0->SetPos({ 0, y });
-            NewWall0->SetRenderChar('W');
+            NewWall0->SetRenderChar(WallRenderChar);
  
             Wall* NewWall1 = EngineCore.CreateObject<Wall>(SnakeGameObjectType::Wall);
             NewWall1->SetPos({ ScreenX - 1, y });
-            NewWall1->SetRenderChar('W');
+            NewWall1->SetRenderChar(WallRenderChar);
         }
     }
 

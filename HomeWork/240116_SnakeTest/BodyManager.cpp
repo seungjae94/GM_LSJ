@@ -3,6 +3,7 @@
 #include "Body.h"
 
 Body* BodyManager::CurBody = nullptr;
+char BodyManager::CurBodyRenderChar = '!';
 
 void BodyManager::Update()
 {
@@ -81,7 +82,7 @@ void BodyManager::Update()
 
 		// 랜덤한 위치가 지정됐으므로
 		CurBody = GetCore()->CreateObject<Body>();
-		CurBody->SetRenderChar('#');
+		CurBody->SetRenderChar(CurBodyRenderChar);
 		CurBody->SetPos(CreateBodyPos);
 	}
 }

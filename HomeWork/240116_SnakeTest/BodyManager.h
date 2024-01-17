@@ -14,10 +14,15 @@ public:
 		CurBody = nullptr;
 	}
 	
+	static void SetCurBodyRenderChar(char _CurBodyRenderChar)
+	{
+		CurBodyRenderChar = _CurBodyRenderChar;
+	}
 
 	void Update() override;
 
 private:
 	static class Body* CurBody;
+	static char CurBodyRenderChar;
 };
 
