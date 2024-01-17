@@ -75,32 +75,19 @@ void Head::Update()
 	Move(MovePos, MoveDir);
 }
 
-Part* Head::GetTail()
-{
-	// 꼬리 찾기
-	Part* Tail = this;
-	Part* TailNext = Back;
-	while (TailNext != nullptr)
-	{
-		Tail = TailNext;
-		TailNext = TailNext->GetBack();
-	}
-
-	return Tail;
-}
-
 void Head::CollisionWithCurBody(const int2& _MovePos)
 {
 	Body* CurBody = BodyManager::GetCurBody();
 
 	if (CurBody->GetPos() == _MovePos)
 	{
-		Part* Tail = GetTail();
-
 		// 꼬리 뒤에 CurBody 추가
 		Tail->SetBack(CurBody);
 		CurBody->SetFront(Tail);
 		CurBody->SetRenderChar('@');
+
+		// CurBody를 꼬리로 설정
+		Tail = CurBody;
 
 		BodyManager::ResetBody();
 	}
@@ -114,9 +101,7 @@ void Head::CollisionWithMyBody(const int2& _MovePos, bool& _GameEnd)
 		return;
 	}
 
-	Part* Tail = GetTail();
 	Part* MyBody = Back;
-
 	while (MyBody != Tail)
 	{
 		// MyBody와 충돌하는 경우

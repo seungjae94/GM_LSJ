@@ -7,9 +7,7 @@ protected:
 	void Update() override;
 private:
 	int2 PrevDir = Up;
-
-	// 유틸 함수
-	Part* GetTail();
+	Part* Tail = this;
 
 	// 충돌 처리 함수
 	void CollisionWithCurBody(const int2& _MovePos);
