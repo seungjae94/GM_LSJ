@@ -60,8 +60,17 @@ void Head::Update()
 	int2 MovePos = GetPos() + MoveDir;
 
 	// 충돌 처리
-	Collision(MovePos);
-	
+	bool GameEnd = false;
+	CollisionWithCurBody(MovePos);
+	CollisionWithMyBody(MovePos, GameEnd);
+
+	// 게임 종료 처리
+	if (GameEnd)
+	{
+		GetCore()->EngineEnd();
+		return;
+	}
+
 	// 이동 처리
 	Move(MovePos, MoveDir);
 }
@@ -80,7 +89,7 @@ Part* Head::GetTail()
 	return Tail;
 }
 
-void Head::Collision(const int2& _MovePos)
+void Head::CollisionWithCurBody(const int2& _MovePos)
 {
 	Body* CurBody = BodyManager::GetCurBody();
 
@@ -88,12 +97,36 @@ void Head::Collision(const int2& _MovePos)
 	{
 		Part* Tail = GetTail();
 
-		// 꼬리 위치에 추가
+		// 꼬리 뒤에 CurBody 추가
 		Tail->SetBack(CurBody);
 		CurBody->SetFront(Tail);
 		CurBody->SetRenderChar('@');
 
 		BodyManager::ResetBody();
+	}
+}
+
+void Head::CollisionWithMyBody(const int2& _MovePos, bool& _GameEnd)
+{
+	// 길이 1인 경우 MyBody와 충돌하지 않는다.
+	if (Back == nullptr)
+	{
+		return;
+	}
+
+	Part* Tail = GetTail();
+	Part* MyBody = Back;
+
+	while (MyBody != Tail)
+	{
+		// MyBody와 충돌하는 경우
+		if (MyBody->GetPos() == _MovePos)
+		{
+			_GameEnd = true;
+			return;
+		}
+
+		MyBody = MyBody->GetBack();
 	}
 }
 
